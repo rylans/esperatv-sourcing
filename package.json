@@ -1,0 +1,27 @@
+{
+  "name": "esperatv-sourcing",
+  "version": "1.0.0",
+  "description": "Content sourcing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rylans/esperatv-sourcing.git"
+  },
+  "keywords": [
+    "torrent",
+    "content",
+    "discovery",
+    "search",
+    "video",
+    "tv"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rylans/esperatv-sourcing/issues"
+  },
+  "homepage": "https://github.com/rylans/esperatv-sourcing#readme"
+}
