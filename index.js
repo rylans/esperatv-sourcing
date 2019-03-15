@@ -6,11 +6,15 @@ const dummySources = {
   'Little Lulu - Cad and Caddy': ['magnet:?xt=urn:btih:2035005a6025142dc0a3419e63b83987aa1b0da6'],
 };
 
+function dummySourceProvider(q) {
+  return Promise.resolve(dummySources[q]);
+}
+
 function Sourcing(args) {
   if (!(this instanceof Sourcing)) return new Sourcing(args);
 
   this.args = args || {};
-  this.providers = this.args['providers'] || [];
+  this.providers = this.args['providers'] || [dummySourceProvider];
 }
 
 Sourcing.prototype.use = function(provider) {
@@ -22,22 +26,26 @@ Sourcing.prototype.list = function() {
   return dummySources;
 };
 
-Sourcing.prototype.forTitle = function(title) {
-  var sourcesForQuery = [];
+Sourcing.prototype.forTitle = function(title, cb) {
+  var promises = [];
   for(var i = 0; i < this.providers.length; i++) {
-    var sources = []
     try {
-      sources = this.providers[i](title);
-    } catch(err) {
-      console.log("Error when querying provider: " + err);
-    }
-
-    sourcesForQuery = sourcesForQuery.concat(sources);
+    promises.push(this.providers[i](title));
+    } catch (e) {}
   }
 
-  var src = dummySources[title];
-  if (src === undefined) return sourcesForQuery;
-  return src;
+  Promise.all(promises)
+    .then( v => {
+      if (v === undefined) return;
+      var lst = [];
+      for(var i = 0; i < v.length; i++) {
+	if(v[i] !== undefined) {
+	  lst = lst.concat(v[i]);
+	}
+      }
+      cb(lst);
+    })
+  .catch(err => console.log(err));
 };
 
 module.exports = Sourcing;
