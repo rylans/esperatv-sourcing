@@ -13,13 +13,30 @@ function Sourcing(args) {
   this.providers = this.args['providers'] || [];
 }
 
+Sourcing.prototype.use = function(provider) {
+  this.providers.push(provider);
+  return this;
+};
+
 Sourcing.prototype.list = function() {
   return dummySources;
 };
 
 Sourcing.prototype.forTitle = function(title) {
+  var sourcesForQuery = [];
+  for(var i = 0; i < this.providers.length; i++) {
+    var sources = []
+    try {
+      sources = this.providers[i](title);
+    } catch(err) {
+      console.log("Error when querying provider: " + err);
+    }
+
+    sourcesForQuery = sourcesForQuery.concat(sources);
+  }
+
   var src = dummySources[title];
-  if (src === undefined) return [];
+  if (src === undefined) return sourcesForQuery;
   return src;
 };
 

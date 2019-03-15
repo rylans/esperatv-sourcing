@@ -30,4 +30,36 @@ describe('Sourcing', function () {
     assert.equal(allSources['Little Lulu - Cad and Caddy'][0], 'magnet:?xt=urn:btih:2035005a6025142dc0a3419e63b83987aa1b0da6');
   });
 
+  it ('should source something from custom provider', function () {
+    const sourcing = new Sourcing();
+    sourcing.use(function (query) {
+      if ('film-name' === query) return ['magnet-link-abc123'];
+      return [];
+    });
+
+    var sources = sourcing.forTitle('film-name');
+    assert.equal(sources.length, 1);
+    assert.equal(sources[0], 'magnet-link-abc123');
+  });
+
+  it ('should source nothing from custom provider', function () {
+    const sourcing = new Sourcing();
+    sourcing.use(function (query) {
+      if ('film-name' === query) return ['magnet-link-abc123'];
+      return [];
+    });
+
+    var sources = sourcing.forTitle('no-such-content');
+    assert.equal(sources.length, 0);
+  });
+
+  it ('should source nothing from custom provider that throws', function () {
+    const sourcing = new Sourcing();
+    sourcing.use(function (query) {
+      throw "any error";
+    });
+
+    var sources = sourcing.forTitle('any-query');
+    assert.equal(sources.length, 0);
+  });
 });
