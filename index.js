@@ -13,10 +13,6 @@ Sourcing.prototype.use = function(provider) {
   return this;
 };
 
-Sourcing.prototype.list = function() {
-  return dummySources;
-};
-
 Sourcing.prototype.forTitle = function(title, cb) {
   var promises = [];
   for(var i = 0; i < this.providers.length; i++) {
