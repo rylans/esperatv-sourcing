@@ -17,7 +17,21 @@ $ npm install esperatv-sourcing
 <!-- eslint-disable no-unused-vars -->
 
 ```js
-var sourcing = require('esperatv-sourcing')
+var Sourcing = require('esperatv-sourcing')
+
+var sourcing = new Sourcing();
+
+var freeSoftwareProvider = function(query) {
+  if ('ubuntu' === query) return Promise.resolve(['magnet:?xt=urn:btih:5a8ce26e8a19a877d8ccc927fcc18e34e1f5ff67']);
+  return Promise.resolve([]);
+};
+
+sourcing.use(freeSoftwareProvider);
+
+sourcing.forTitle('ubuntu', function(magnets) {
+  console.log(magnets);
+});
+
 ```
 
 ## License
